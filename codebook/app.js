@@ -95,9 +95,13 @@ function getPrismLanguage(language) {
     vba: 'basic',
     basic: 'basic',
     powerquery: 'sql',
-    pq: 'sql'
+    pq: 'sql',
+    excel: 'none',
+    formula: 'none',
+    text: 'none',
+    txt: 'none'
   };
-  return map[normalizeText(language)] || 'markup';
+  return map[normalizeText(language)] || 'none';
 }
 
 function escapeHtml(str) {
