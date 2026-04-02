@@ -75,5 +75,20 @@
     "updated": "2026-04-02",
     "pinned": false,
     "file": "./snippets/json/tools_config.json"
+  },
+    {
+    "title": "EXCEL高频使用公式",
+    "language": "excel",
+    "category": "Excel函数公式",
+    "description": "工作中高频使用的Excel公式函数",
+    "tags": [
+      "GitHub Pages",
+      "excel",
+      "工作高频公式"
+    ],
+    "source": "静态网页工具箱",
+    "updated": "2026-04-02",
+    "pinned": false,
+    "file": "./snippets/excel/excel.txt"
   }
 ]
