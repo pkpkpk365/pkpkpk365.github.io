@@ -1,0 +1,9 @@
+[
+  {
+    "name": "股市年化收益率计算器",
+    "desc": "输入起始日期、点位和结束日期、点位计算",
+    "url": "./stock-annual-return/",
+    "category": "金融工具",
+    "recommended": true
+  }
+]

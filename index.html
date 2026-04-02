@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的网页工具箱</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --tag: #eef2ff;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      --radius: 18px;
+      --max: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    .hero {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.1;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr auto;
+      gap: 12px;
+      margin: 22px 0 14px;
+    }
+
+    .input, .select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 18px;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 48px;
+      box-shadow: var(--shadow);
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin: 6px 2px 18px;
+      color: var(--muted);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .badge {
+      flex-shrink: 0;
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .desc {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      background: var(--tag);
+      color: #4338ca;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .link {
+      text-decoration: none;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--muted);
+      background: rgba(255,255,255,.75);
+      border: 1px dashed var(--line);
+      border-radius: 20px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 780px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      .btn { width: 100%; }
+      .card-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .link { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>我的网页工具箱</h1>
+      <p class="sub">
+        这里收录我在 GitHub Pages 上发布的小工具。支持搜索、分类筛选、推荐标记。
+        后续新增工具时，只需要修改同目录下的 <strong>tools.json</strong>，不用手改 HTML。
+      </p>
+    </section>
+
+    <section>
+      <div class="controls">
+        <input id="searchInput" class="input" type="text" placeholder="搜索工具名、简介、分类…" />
+        <select id="categorySelect" class="select">
+          <option value="全部">全部分类</option>
+        </select>
+        <button id="resetBtn" class="btn">重置筛选</button>
+      </div>
+
+      <div class="meta">
+        <span id="countText">加载中…</span>
+        <span>数据文件：tools.json</span>
+      </div>
+
+      <div id="chips" class="chips"></div>
+      <div id="toolGrid" class="grid"></div>
+      <div id="emptyBox" class="empty">没有匹配到结果。检查关键词，或者确认 tools.json 是否填写正确。</div>
+    </section>
+
+    <div class="footer">建议每个工具都放在单独文件夹中，例如 <code>/img-compress/</code>、<code>/json-viewer/</code>。</div>
+  </div>
+
+  <script>
+    const state = {
+      tools: [],
+      keyword: '',
+      category: '全部'
+    };
+
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
+    const resetBtn = document.getElementById('resetBtn');
+    const countText = document.getElementById('countText');
+    const chips = document.getElementById('chips');
+    const toolGrid = document.getElementById('toolGrid');
+    const emptyBox = document.getElementById('emptyBox');
+
+    function normalizeTools(data) {
+      if (!Array.isArray(data)) return [];
+      return data.map(item => ({
+        name: item.name || '未命名工具',
+        desc: item.desc || '暂无简介',
+        url: item.url || '#',
+        category: item.category || '未分类',
+        recommended: Boolean(item.recommended)
+      }));
+    }
+
+    function getCategories() {
+      return ['全部', ...new Set(state.tools.map(t => t.category))];
+    }
+
+    function renderCategories() {
+      const categories = getCategories();
+      categorySelect.innerHTML = categories
+        .map(c => `<option value="${c}">${c === '全部' ? '全部分类' : c}</option>`)
+        .join('');
+      categorySelect.value = state.category;
+
+      chips.innerHTML = categories.map(c => `
+        <button class="chip ${state.category === c ? 'active' : ''}" data-category="${c}">
+          ${c}
+        </button>
+      `).join('');
+
+      chips.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.category = btn.dataset.category;
+          categorySelect.value = state.category;
+          renderCategories();
+          renderTools();
+        });
+      });
+    }
+
+    function filterTools() {
+      const keyword = state.keyword.trim().toLowerCase();
+      return state.tools.filter(tool => {
+        const matchCategory = state.category === '全部' || tool.category === state.category;
+        const text = `${tool.name} ${tool.desc} ${tool.category}`.toLowerCase();
+        const matchKeyword = !keyword || text.includes(keyword);
+        return matchCategory && matchKeyword;
+      });
+    }
+
+    function renderTools() {
+      const list = filterTools();
+      countText.textContent = `共 ${state.tools.length} 个工具，当前显示 ${list.length} 个`;
+
+      if (!list.length) {
+        toolGrid.innerHTML = '';
+        emptyBox.style.display = 'block';
+        return;
+      }
+
+      emptyBox.style.display = 'none';
+      toolGrid.innerHTML = list.map(tool => `
+        <article class="card">
+          <div class="card-top">
+            <h3>${escapeHtml(tool.name)}</h3>
+            ${tool.recommended ? '<span class="badge">推荐</span>' : ''}
+          </div>
+          <p class="desc">${escapeHtml(tool.desc)}</p>
+          <div class="card-bottom">
+            <span class="tag">${escapeHtml(tool.category)}</span>
+            <a class="link" href="${tool.url}" target="_self">打开工具</a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    async function loadTools() {
+      try {
+        const res = await fetch('./tools.json?_=' + Date.now());
+        if (!res.ok) throw new Error('加载失败');
+        const data = await res.json();
+        state.tools = normalizeTools(data);
+        renderCategories();
+        renderTools();
+      } catch (err) {
+        countText.textContent = 'tools.json 加载失败';
+        emptyBox.style.display = 'block';
+        emptyBox.textContent = '无法读取 tools.json。请检查文件是否存在、JSON 格式是否正确、是否与 index.html 位于同一目录。';
+      }
+    }
+
+    searchInput.addEventListener('input', e => {
+      state.keyword = e.target.value;
+      renderTools();
+    });
+
+    categorySelect.addEventListener('change', e => {
+      state.category = e.target.value;
+      renderCategories();
+      renderTools();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      state.keyword = '';
+      state.category = '全部';
+      searchInput.value = '';
+      categorySelect.value = '全部';
+      renderCategories();
+      renderTools();
+    });
+
+    loadTools();
+  </script>
+</body>
+</html>
