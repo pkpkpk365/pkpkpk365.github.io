@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>代码记录本 Pro</title>
+  <meta name="description" content="个人代码记录本，支持代码高亮、复制、搜索、分类、深色模式。" />
+  <link rel="stylesheet" href="style.css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" id="prism-light-theme" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" id="prism-dark-theme" disabled />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">GitHub Pages · Static Codebook</div>
+        <h1>代码记录本 Pro</h1>
+        <p class="hero-desc">把已经验证可用的代码沉淀下来，避免重复提问、重复调试、重复踩坑。</p>
+      </div>
+      <div class="hero-actions">
+        <button id="themeToggle" class="btn btn-secondary" type="button">🌙 深色模式</button>
+        <a class="btn btn-primary" href="../index.html">返回工具箱</a>
+      </div>
+    </header>
+
+    <section class="controls-card">
+      <div class="controls-grid">
+        <label class="control">
+          <span>搜索</span>
+          <input id="searchInput" type="text" placeholder="搜索标题、说明、标签、来源..." />
+        </label>
+
+        <label class="control">
+          <span>语言</span>
+          <select id="langFilter">
+            <option value="">全部语言</option>
+          </select>
+        </label>
+
+        <label class="control">
+          <span>分类</span>
+          <select id="categoryFilter">
+            <option value="">全部分类</option>
+          </select>
+        </label>
+
+        <label class="control">
+          <span>排序</span>
+          <select id="sortSelect">
+            <option value="updated_desc">按更新时间（新→旧）</option>
+            <option value="updated_asc">按更新时间（旧→新）</option>
+            <option value="title_asc">按标题（A→Z）</option>
+            <option value="title_desc">按标题（Z→A）</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="summary-row">
+        <div id="statsText" class="stats-text">加载中...</div>
+        <button id="clearFiltersBtn" class="btn btn-ghost" type="button">清空筛选</button>
+      </div>
+    </section>
+
+    <section id="pinnedSection" class="section hidden">
+      <div class="section-title-row">
+        <h2>常用收藏</h2>
+        <span class="section-subtitle">你经常用、值得反复复用的代码</span>
+      </div>
+      <div id="pinnedList" class="snippet-list"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>全部代码</h2>
+        <span class="section-subtitle">支持搜索、筛选、排序、复制、折叠</span>
+      </div>
+      <div id="snippetList" class="snippet-list"></div>
+    </section>
+  </div>
+
+  <template id="snippetTemplate">
+    <article class="snippet-card">
+      <div class="snippet-head">
+        <div class="snippet-title-wrap">
+          <h3 class="snippet-title"></h3>
+          <div class="meta-line"></div>
+        </div>
+        <div class="snippet-actions">
+          <button class="btn btn-ghost action-toggle" type="button">折叠</button>
+          <button class="btn btn-secondary action-copy" type="button">复制代码</button>
+        </div>
+      </div>
+
+      <p class="snippet-desc"></p>
+
+      <div class="tag-row tags"></div>
+
+      <div class="extra-meta"></div>
+
+      <div class="code-wrap">
+        <pre class="code-pre"><code></code></pre>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-basic.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
