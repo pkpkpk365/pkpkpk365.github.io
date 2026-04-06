@@ -7,7 +7,7 @@
    - 再编辑 snippets.json 增加一条记录
 4. 建议字段：
    - title: 标题
-   - language: 语言
+   - language: 语言（填写：vba、python、powerquery、json、excel等）
    - category: 分类
    - description: 说明
    - tags: 标签数组
