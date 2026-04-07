@@ -1,0 +1,1 @@
+javascript:(function(){ Object.defineProperty(document, 'hidden', { value: false }); Object.defineProperty(document, 'visibilityState', { value: 'visible' }); document.addEventListener('visibilitychange', e => e.stopImmediatePropagation(), true); })();
