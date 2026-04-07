@@ -1,0 +1,8 @@
+DateTime.FromText(
+    Text.Start([你的列名],4) & "-" &
+    Text.Range([你的列名],4,2) & "-" &
+    Text.Range([你的列名],6,2) & " " &
+    Text.Range([你的列名],8,2) & ":" &
+    Text.Range([你的列名],10,2) & ":" &
+    Text.Range([你的列名],12,2)
+)
