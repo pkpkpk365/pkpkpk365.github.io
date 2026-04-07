@@ -102,65 +102,109 @@
 ' ✘ 需要严格姓名识别（建议用正则/分词）
 '
 '============================================================
-Sub FindAndMarkWithSheetConfigs()
+Option Explicit
 
+Sub FindAndMarkByConfig()
+
+    Dim wb As Workbook
     Dim wsName As Worksheet
+    Dim wsConfig As Worksheet
     Dim wsTarget As Worksheet
-    Dim i As Long, j As Long, k As Long
-    Dim nameFirstRow As Long, nameLastRow As Long
-    Dim nameCol As String
-    Dim nameToFind As String
     
-    Dim sheetConfigs As Variant
+    Dim nameCol As String
+    Dim nameFirstRow As Long
+    Dim nameLastRow As Long
+    
+    Dim configLastRow As Long
+    Dim i As Long, j As Long, k As Long
+    
     Dim targetSheetName As String
     Dim searchCol As String
-    Dim searchFirstRow As Long, searchLastRow As Long
-    Dim resultCol As Long
+    Dim resultCol As String
+    Dim searchFirstRow As Long
+    Dim searchLastRow As Long
+    Dim enabledFlag As String
     
+    Dim nameToFind As String
+    Dim cellText As String
     Dim oldValue As String
     
-    '========================
-    ' 1. 姓名来源表配置
-    '========================
-    Set wsName = ThisWorkbook.Sheets("Sheet1")
+    Dim matchMode As String      ' "FUZZY" 或 "EXACT"
+    Dim writeMode As String      ' "APPEND" 或 "OVERWRITE"
+    Dim clearResultsFirst As Boolean
     
-    nameCol = "A"          ' 姓名所在列
-    nameFirstRow = 1       ' 姓名起始行
-    nameLastRow = 100      ' 姓名结束行
+    Dim matchedCount As Long
+    Dim skippedSheetCount As Long
+    Dim processedSheetCount As Long
     
-    '========================
-    ' 2. 目标Sheet配置
-    ' 每一项格式：
-    ' Array("Sheet名称", "查找列", 查找起始行, 查找结束行, 结果列号)
-    ' 例如：
-    ' Array("Sheet2", "B", 2, 1000, 3)
-    ' 表示在 Sheet2 的 B2:B1000 查找，结果写入第3列(C列)
-    '========================
-    sheetConfigs = Array( _
-        Array("Sheet2", "B", 2, 1000, 3), _
-        Array("Sheet3", "D", 2, 800, 5), _
-        Array("Sheet4", "F", 3, 1200, 7) _
-    )
+    Set wb = ThisWorkbook
     
     '========================
-    ' 3. 先清空各目标Sheet结果列
+    ' 1. 基础配置
     '========================
-    On Error GoTo SheetError
+    Set wsName = wb.Sheets("Sheet1")     ' 姓名来源表
+    Set wsConfig = wb.Sheets("Config")   ' 配置表
     
-    For k = LBound(sheetConfigs) To UBound(sheetConfigs)
-        targetSheetName = sheetConfigs(k)(0)
-        searchFirstRow = sheetConfigs(k)(2)
-        searchLastRow = sheetConfigs(k)(3)
-        resultCol = sheetConfigs(k)(4)
-        
-        Set wsTarget = ThisWorkbook.Sheets(targetSheetName)
-        
-        wsTarget.Range(wsTarget.Cells(searchFirstRow, resultCol), _
-                       wsTarget.Cells(searchLastRow, resultCol)).ClearContents
-    Next k
+    nameCol = "A"                        ' 姓名列
+    nameFirstRow = 1                     ' 姓名起始行
+    nameLastRow = wsName.Cells(wsName.Rows.Count, nameCol).End(xlUp).Row   ' 自动识别姓名最后行
     
     '========================
-    ' 4. 开始查找并标记
+    ' 2. 运行模式配置
+    '========================
+    matchMode = "FUZZY"          ' 可选：FUZZY=模糊匹配，EXACT=精确匹配
+    writeMode = "APPEND"         ' 可选：APPEND=追加，OVERWRITE=覆盖
+    clearResultsFirst = True     ' 是否先清空结果列
+    
+    '========================
+    ' 3. 读取Config最后一行
+    '========================
+    configLastRow = wsConfig.Cells(wsConfig.Rows.Count, "A").End(xlUp).Row
+    
+    If configLastRow < 2 Then
+        MsgBox "Config表没有可用配置。", vbExclamation
+        Exit Sub
+    End If
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+    
+    On Error GoTo SafeExit
+    
+    '========================
+    ' 4. 先清空结果列
+    '========================
+    If clearResultsFirst Then
+        For k = 2 To configLastRow
+            
+            targetSheetName = Trim(CStr(wsConfig.Cells(k, "A").Value))
+            searchCol = UCase(Trim(CStr(wsConfig.Cells(k, "B").Value)))
+            searchFirstRow = Val(wsConfig.Cells(k, "C").Value)
+            resultCol = UCase(Trim(CStr(wsConfig.Cells(k, "D").Value)))
+            enabledFlag = Trim(CStr(wsConfig.Cells(k, "E").Value))
+            
+            If targetSheetName <> "" And searchCol <> "" And resultCol <> "" Then
+                If enabledFlag = "" Or UCase(enabledFlag) = "是" Or UCase(enabledFlag) = "Y" Or UCase(enabledFlag) = "YES" Then
+                    
+                    If SheetExists(targetSheetName, wb) Then
+                        Set wsTarget = wb.Sheets(targetSheetName)
+                        
+                        If searchFirstRow < 1 Then searchFirstRow = 1
+                        
+                        searchLastRow = wsTarget.Cells(wsTarget.Rows.Count, searchCol).End(xlUp).Row
+                        If searchLastRow >= searchFirstRow Then
+                            wsTarget.Range(resultCol & searchFirstRow & ":" & resultCol & searchLastRow).ClearContents
+                        End If
+                    End If
+                    
+                End If
+            End If
+        Next k
+    End If
+    
+    '========================
+    ' 5. 开始查找
     '========================
     For i = nameFirstRow To nameLastRow
         
@@ -168,45 +212,128 @@ Sub FindAndMarkWithSheetConfigs()
         
         If nameToFind <> "" Then
             
-            For k = LBound(sheetConfigs) To UBound(sheetConfigs)
+            For k = 2 To configLastRow
                 
-                targetSheetName = sheetConfigs(k)(0)
-                searchCol = sheetConfigs(k)(1)
-                searchFirstRow = sheetConfigs(k)(2)
-                searchLastRow = sheetConfigs(k)(3)
-                resultCol = sheetConfigs(k)(4)
+                targetSheetName = Trim(CStr(wsConfig.Cells(k, "A").Value))
+                searchCol = UCase(Trim(CStr(wsConfig.Cells(k, "B").Value)))
+                searchFirstRow = Val(wsConfig.Cells(k, "C").Value)
+                resultCol = UCase(Trim(CStr(wsConfig.Cells(k, "D").Value)))
+                enabledFlag = Trim(CStr(wsConfig.Cells(k, "E").Value))
                 
-                Set wsTarget = ThisWorkbook.Sheets(targetSheetName)
+                If targetSheetName = "" Or searchCol = "" Or resultCol = "" Then
+                    GoTo NextConfig
+                End If
+                
+                If Not (enabledFlag = "" Or UCase(enabledFlag) = "是" Or UCase(enabledFlag) = "Y" Or UCase(enabledFlag) = "YES") Then
+                    GoTo NextConfig
+                End If
+                
+                If Not SheetExists(targetSheetName, wb) Then
+                    skippedSheetCount = skippedSheetCount + 1
+                    GoTo NextConfig
+                End If
+                
+                Set wsTarget = wb.Sheets(targetSheetName)
+                processedSheetCount = processedSheetCount + 1
+                
+                If searchFirstRow < 1 Then searchFirstRow = 1
+                
+                searchLastRow = wsTarget.Cells(wsTarget.Rows.Count, searchCol).End(xlUp).Row
+                If searchLastRow < searchFirstRow Then GoTo NextConfig
                 
                 For j = searchFirstRow To searchLastRow
                     
-                    If InStr(1, CStr(wsTarget.Cells(j, searchCol).Value), nameToFind, vbTextCompare) > 0 Then
+                    cellText = Trim(CStr(wsTarget.Cells(j, searchCol).Value))
+                    
+                    If cellText <> "" Then
                         
-                        oldValue = Trim(CStr(wsTarget.Cells(j, resultCol).Value))
-                        
-                        ' 如果结果单元格为空，直接写入
-                        If oldValue = "" Then
-                            wsTarget.Cells(j, resultCol).Value = nameToFind
-                        
-                        ' 如果已有相同姓名，不重复追加
-                        ElseIf InStr(1, "、" & oldValue & "、", "、" & nameToFind & "、", vbTextCompare) = 0 Then
-                            wsTarget.Cells(j, resultCol).Value = oldValue & "、" & nameToFind
+                        If IsMatched(cellText, nameToFind, matchMode) Then
+                            
+                            If UCase(writeMode) = "OVERWRITE" Then
+                                wsTarget.Cells(j, resultCol).Value = nameToFind
+                            Else
+                                oldValue = Trim(CStr(wsTarget.Cells(j, resultCol).Value))
+                                
+                                If oldValue = "" Then
+                                    wsTarget.Cells(j, resultCol).Value = nameToFind
+                                ElseIf Not ExistsInDelimitedText(oldValue, nameToFind, "、") Then
+                                    wsTarget.Cells(j, resultCol).Value = oldValue & "、" & nameToFind
+                                End If
+                            End If
+                            
+                            matchedCount = matchedCount + 1
                         End If
                         
                     End If
                     
                 Next j
                 
+NextConfig:
             Next k
             
         End If
         
     Next i
     
-    MsgBox "多Sheet查找并标记完成！", vbInformation
-    Exit Sub
+    MsgBox "处理完成！" & vbCrLf & _
+           "姓名总行数：" & (nameLastRow - nameFirstRow + 1) & vbCrLf & _
+           "配置行数：" & (configLastRow - 1) & vbCrLf & _
+           "匹配次数：" & matchedCount & vbCrLf & _
+           "跳过的不存在Sheet次数：" & skippedSheetCount, vbInformation
 
-SheetError:
-    MsgBox "发生错误，可能是目标Sheet名称写错了：" & vbCrLf & targetSheetName, vbExclamation
+SafeExit:
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+
+    If Err.Number <> 0 Then
+        MsgBox "运行出错：" & vbCrLf & Err.Description, vbExclamation
+    End If
 
 End Sub
+
+
+Private Function SheetExists(ByVal sheetName As String, ByVal wb As Workbook) As Boolean
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = wb.Sheets(sheetName)
+    SheetExists = Not ws Is Nothing
+    Set ws = Nothing
+    On Error GoTo 0
+End Function
+
+
+Private Function IsMatched(ByVal sourceText As String, ByVal keyword As String, ByVal matchMode As String) As Boolean
+    
+    Dim s1 As String
+    Dim s2 As String
+    
+    s1 = Trim(CStr(sourceText))
+    s2 = Trim(CStr(keyword))
+    
+    If s1 = "" Or s2 = "" Then
+        IsMatched = False
+        Exit Function
+    End If
+    
+    Select Case UCase(matchMode)
+        Case "EXACT"
+            IsMatched = (StrComp(s1, s2, vbTextCompare) = 0)
+        Case Else
+            IsMatched = (InStr(1, s1, s2, vbTextCompare) > 0)
+    End Select
+    
+End Function
+
+
+Private Function ExistsInDelimitedText(ByVal fullText As String, ByVal oneItem As String, ByVal delimiter As String) As Boolean
+    
+    Dim wrappedFull As String
+    Dim wrappedItem As String
+    
+    wrappedFull = delimiter & Trim(CStr(fullText)) & delimiter
+    wrappedItem = delimiter & Trim(CStr(oneItem)) & delimiter
+    
+    ExistsInDelimitedText = (InStr(1, wrappedFull, wrappedItem, vbTextCompare) > 0)
+    
+End Function
