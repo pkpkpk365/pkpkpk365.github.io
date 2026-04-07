@@ -1,9 +1,0 @@
-let
-    Source = Folder.Files("D:\\Data\\ToMerge"),
-    FilterHiddenFiles = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
-    AddCustom = Table.AddColumn(FilterHiddenFiles, "Transform File", each Excel.Workbook([Content], true)),
-    ExpandTables = Table.ExpandTableColumn(AddCustom, "Transform File", {"Data", "Name"}, {"Data", "SheetName"}),
-    SelectSheet = Table.SelectRows(ExpandTables, each [SheetName] = "Sheet1"),
-    ExpandData = Table.ExpandTableColumn(SelectSheet, "Data", {"Column1", "Column2", "Column3"}, {"Column1", "Column2", "Column3"})
-in
-    ExpandData
