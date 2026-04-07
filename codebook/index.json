@@ -1,0 +1,42 @@
+[
+  {
+    "language": "python",
+    "index": "python/index.json"
+  },
+  {
+    "language": "excel",
+    "index": "excel/index.json"
+  },
+  {
+    "language": "vba",
+    "index": "vba/index.json"
+  },
+  {
+    "language": "powerquery",
+    "index": "powerquery/index.json"
+  },
+  {
+    "language": "markdown",
+    "index": "markdown/index.json"
+  },
+  {
+    "language": "javascript",
+    "index": "javascript/index.json"
+  },
+  {
+    "language": "json",
+    "index": "json/index.json"
+  },
+  {
+    "language": "html",
+    "index": "html/index.json"
+  },
+  {
+    "language": "css",
+    "index": "css/index.json"
+  },
+  {
+    "language": "txt",
+    "index": "txt/index.json"
+  }
+]
