@@ -3,5 +3,10 @@
     "title": "[Excel-统计] 忽略错误值求和",
     "desc": "适用于包含错误值的区域求和",
     "file": "sum_ignore_error.txt"
+  },
+  {
+    "title": "[Excel-标记] 标记连续内容的最后一次出现位置",
+    "desc": "适用于在Excel中将某列中连续内容的最后出现那个标记出来",
+    "file": "FindAndMarkLastRow.txt"
   }
 ]
