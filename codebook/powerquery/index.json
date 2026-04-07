@@ -3,5 +3,10 @@
     "title": "[PowerQuery-清洗] 去除空行示例",
     "desc": "演示如何在 Power Query 中清洗空行",
     "file": "remove_blank_lines.txt"
-  }
+  },
+  {
+    "title": "[PowerQuery-文本日期转换] 将14位文本格式日期时间转换为标准日期时间",
+    "desc": "将“20260307090806”这样的文本格式时间戳转换为“2026/03/07 09:08:06”这样的标准日期时间格式",
+    "file": "TextToDateTime_14Digits.txt"
+  }  
 ]
