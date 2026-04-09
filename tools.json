@@ -6,11 +6,18 @@
     "category": "金融工具",
     "recommended": true
   },
-    {
+  {
     "name": "代码收集本",
     "desc": "记录我日常生成和高频使用的各类代码",
     "url": "./codebook/",
     "category": "编程工具",
+    "recommended": true
+  },
+  {
+    "name": "小游戏",
+    "desc": "收集我和儿子们自己开发的小游戏",
+    "url": "./game/",
+    "category": "游戏",
     "recommended": true
   }
 ]
