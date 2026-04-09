@@ -1,7 +1,7 @@
 [
   {
-    "name": "示例游戏",
-    "folder": "demo",
+    "name": "飞机大战",
+    "folder": "planebattle",
     "description": "这是一个示例小游戏",
     "tags": ["示例"]
   }
