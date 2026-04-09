@@ -6,6 +6,7 @@
 3. 修改 games.json
 
 ## games.json格式
+```json
 {
   "name": "名称",
   "folder": "文件夹名",
