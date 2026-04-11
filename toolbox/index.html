@@ -1,39 +1,260 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>工具箱</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的工具箱</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .back-link {
+      display: inline-block;
+      text-decoration: none;
+      color: #2563eb;
+      font-size: 15px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+
+    .desc {
+      margin: 0 0 24px;
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .search-box {
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+      background: #fff;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tool-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      overflow: hidden;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: #c7d2fe;
+    }
+
+    .tool-link {
+      display: block;
+      padding: 18px 16px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .tool-title {
+      margin: 0 0 8px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .tool-path {
+      font-size: 13px;
+      color: #6b7280;
+      word-break: break-all;
+    }
+
+    .empty-state,
+    .error-state {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .error-state {
+      color: #b91c1c;
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .container {
+        padding: 24px 16px 40px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="topbar">
+      <a class="back-link" href="../">← 返回站点首页</a>
+    </div>
 
-<h1>我的工具箱</h1>
+    <h1>我的工具箱</h1>
+    <p class="desc">这里汇总了我放在 GitHub Pages 上的常用小工具。</p>
 
-<p><a href="../">← 返回站点首页</a></p>
+    <div class="search-box">
+      <input
+        id="searchInput"
+        class="search-input"
+        type="text"
+        placeholder="搜索工具名称..."
+      />
+    </div>
 
-<ul id="tool-list"></ul>
+    <ul id="toolList" class="tool-grid"></ul>
 
-<script>
-fetch('tools.json')
-    .then(res => res.json())
-    .then(data => {
-        const list = document.getElementById('tool-list');
+    <div id="message"></div>
+  </div>
 
-        data.forEach(tool => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
+  <script>
+    let allTools = [];
 
-            a.href = tool.folder + "/index.html";
-            a.textContent = tool.name;
+    function renderTools(tools) {
+      const toolList = document.getElementById("toolList");
+      const message = document.getElementById("message");
 
-            li.appendChild(a);
-            list.appendChild(li);
-        });
-    })
-    .catch(err => {
-        document.body.innerHTML += "<p>JSON加载失败</p>";
-        console.error(err);
+      toolList.innerHTML = "";
+      message.innerHTML = "";
+
+      if (!Array.isArray(tools) || tools.length === 0) {
+        message.innerHTML = '<div class="empty-state">当前没有可显示的工具。</div>';
+        return;
+      }
+
+      tools.forEach(tool => {
+        if (!tool.name || !tool.folder) return;
+
+        const li = document.createElement("li");
+        li.className = "tool-card";
+
+        const a = document.createElement("a");
+        a.className = "tool-link";
+        a.href = `${tool.folder}/index.html`;
+
+        const title = document.createElement("div");
+        title.className = "tool-title";
+        title.textContent = tool.name;
+
+        const path = document.createElement("div");
+        path.className = "tool-path";
+        path.textContent = `${tool.folder}/index.html`;
+
+        a.appendChild(title);
+        a.appendChild(path);
+        li.appendChild(a);
+        toolList.appendChild(li);
+      });
+
+      if (toolList.children.length === 0) {
+        message.innerHTML = '<div class="empty-state">没有匹配的工具。</div>';
+      }
+    }
+
+    async function loadTools() {
+      const message = document.getElementById("message");
+
+      try {
+        const res = await fetch(`tools.json?v=${Date.now()}`, { cache: "no-store" });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("tools.json 不是数组格式");
+        }
+
+        allTools = data;
+        renderTools(allTools);
+      } catch (err) {
+        console.error("加载 tools.json 失败：", err);
+        message.innerHTML = `
+          <div class="error-state">
+            tools.json 加载失败。请检查：
+            <br>1. 文件是否存在
+            <br>2. JSON 格式是否正确
+            <br>3. GitHub Pages 是否已同步最新内容
+          </div>
+        `;
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const keyword = this.value.trim().toLowerCase();
+
+      const filtered = allTools.filter(tool =>
+        (tool.name || "").toLowerCase().includes(keyword)
+      );
+
+      renderTools(filtered);
     });
-</script>
 
+    loadTools();
+  </script>
 </body>
 </html>
