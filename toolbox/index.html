@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>工具箱</title>
+</head>
+<body>
+
+<h1>我的工具箱</h1>
+
+<p><a href="../">← 返回站点首页</a></p>
+
+<ul id="tool-list"></ul>
+
+<script>
+fetch('tools.json')
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById('tool-list');
+
+        data.forEach(tool => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+
+            a.href = tool.folder + "/index.html";
+            a.textContent = tool.name;
+
+            li.appendChild(a);
+            list.appendChild(li);
+        });
+    })
+    .catch(err => {
+        document.body.innerHTML += "<p>JSON加载失败</p>";
+        console.error(err);
+    });
+</script>
+
+</body>
+</html>
