@@ -1,0 +1,15 @@
+{
+  "tools": [
+    {
+      "name": "示例工具：加法计算器",
+      "description": "一个最简单的示例工具，用来演示目录页如何自动读取和展示工具。",
+      "url": "./sample-tool/index.html",
+      "readme": "./sample-tool/README.md",
+      "tags": [
+        "示例",
+        "计算器",
+        "演示"
+      ]
+    }
+  ]
+}

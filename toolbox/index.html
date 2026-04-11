@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML 工具箱</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #57606a;
+      --border: #d0d7de;
+      --link: #0969da;
+      --shadow: 0 6px 18px rgba(31, 35, 40, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f6f8fa 0%, #eef2f6 100%);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; }
+    h1 {
+      margin: 8px 0 6px;
+      font-size: 2rem;
+      line-height: 1.25;
+    }
+    .desc {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .search {
+      flex: 1 1 280px;
+      min-width: 240px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+    .search:focus {
+      border-color: #54aeff;
+      box-shadow: 0 0 0 3px rgba(84, 174, 255, 0.18);
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(31, 35, 40, 0.12);
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.4;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef6ff;
+      color: #0550ae;
+      font-size: 12px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 2px;
+    }
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+    .btn-primary {
+      color: #fff;
+      background: var(--link);
+      border-color: var(--link);
+    }
+    .btn-secondary {
+      color: var(--text);
+      background: #fff;
+    }
+    .status, .error {
+      padding: 18px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .error { color: #b42318; background: #fff5f5; border-color: #f0c0c0; }
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 640px) {
+      h1 { font-size: 1.6rem; }
+      .container { padding-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a class="back-link" href="../">← 返回整个站点根目录</a>
+    </div>
+
+    <h1>HTML 工具箱</h1>
+    <p class="desc">
+      本页会自动读取 <code>tools.json</code> 中登记的工具信息并生成目录。
+      新增或删除工具时，只需维护 JSON 文件，无需改动本页面代码。
+    </p>
+
+    <div class="toolbar">
+      <input id="searchInput" class="search" type="search" placeholder="搜索工具名称、描述、标签..." />
+    </div>
+
+    <div id="meta" class="meta">正在加载工具列表...</div>
+    <div id="app" class="status">正在读取 tools.json...</div>
+
+    <footer>
+      建议将本页面放在一个独立文件夹内，例如 <code>/tools/index.html</code>，
+      这样“返回整个站点根目录”链接 <code>../</code> 就会返回 GitHub Pages 的站点根目录。
+    </footer>
+  </div>
+
+  <script>
+    const app = document.getElementById('app');
+    const meta = document.getElementById('meta');
+    const searchInput = document.getElementById('searchInput');
+    let allTools = [];
+
+    function escapeHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, (s) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[s]));
+    }
+
+    function render(tools) {
+      meta.textContent = `共 ${tools.length} 个工具`;
+      if (!tools.length) {
+        app.className = 'status';
+        app.innerHTML = '没有找到符合条件的工具。';
+        return;
+      }
+
+      const html = `
+        <div class="grid">
+          ${tools.map(tool => `
+            <article class="card">
+              <h2>${escapeHtml(tool.name)}</h2>
+              <p>${escapeHtml(tool.description || '暂无描述')}</p>
+              <div class="tags">
+                ${(tool.tags || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+              </div>
+              <div class="actions">
+                <a class="btn btn-primary" href="${escapeHtml(tool.url)}">打开工具</a>
+                ${tool.readme ? `<a class="btn btn-secondary" href="${escapeHtml(tool.readme)}">说明</a>` : ''}
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+      app.className = '';
+      app.innerHTML = html;
+    }
+
+    function filterTools(keyword) {
+      const k = keyword.trim().toLowerCase();
+      if (!k) return allTools;
+      return allTools.filter(tool => {
+        const text = [
+          tool.name,
+          tool.description,
+          ...(tool.tags || [])
+        ].join(' ').toLowerCase();
+        return text.includes(k);
+      });
+    }
+
+    async function init() {
+      try {
+        const res = await fetch('./tools.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (!Array.isArray(data.tools)) {
+          throw new Error('tools.json 格式错误：缺少 tools 数组');
+        }
+
+        allTools = data.tools.filter(tool => tool && tool.name && tool.url);
+        render(allTools);
+      } catch (err) {
+        meta.textContent = '加载失败';
+        app.className = 'error';
+        app.textContent = '读取 tools.json 失败：' + err.message;
+        console.error(err);
+      }
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      render(filterTools(e.target.value));
+    });
+
+    init();
+  </script>
+</body>
+</html>
