@@ -14,8 +14,8 @@
     {
       "name": "股市年化收益率计算器",
       "description": "输入起止时间和点位，计算年化收益率。",
-      "url": "./sample-tool/index.html",
-      "readme": "./sample-tool/README.md",
+      "url": "./stock-annual-return/index.html",
+      "readme": "./stock-annual-return/README.md",
       "tags": [
         "股市",
         "计算器",
