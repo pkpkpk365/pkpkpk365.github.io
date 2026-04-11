@@ -1,23 +1,23 @@
 [
   {
-    "name": "股市年化收益率计算器",
-    "desc": "输入起始日期、点位和结束日期、点位计算",
-    "url": "./stock-annual-return/",
-    "category": "金融工具",
+    "name": "工具箱",
+    "desc": "各类工具",
+    "url": "./toolbox/",
+    "category": "各类工具",
     "recommended": true
   },
   {
     "name": "代码收集本",
     "desc": "记录我日常生成和高频使用的各类代码",
     "url": "./codebook/",
-    "category": "编程工具",
+    "category": "编程学习",
     "recommended": true
   },
   {
     "name": "小游戏",
     "desc": "收集我和儿子们自己开发的小游戏",
     "url": "./game/",
-    "category": "游戏",
+    "category": "游戏娱乐",
     "recommended": true
   }
 ]
