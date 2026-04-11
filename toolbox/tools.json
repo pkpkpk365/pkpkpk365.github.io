@@ -1,9 +1,5 @@
 [
   {
-    "name": "示例工具",
-    "folder": "example"
-  },
-  {
     "name": "股市年化收益率计算器",
     "folder": "stock-annual-return"
   }
