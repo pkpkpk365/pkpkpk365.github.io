@@ -2,5 +2,9 @@
   {
     "name": "股市年化收益率计算器",
     "folder": "stock-annual-return"
+  },
+  {
+    "name": "通讯基站热力图分析",
+    "folder": "basestation_heatmap"
   }
 ]
