@@ -6,7 +6,7 @@
   {
     "name": "通讯基站热力图分析",
     "folder": "basestation_heatmap"
-  }，
+  },
   {
     "name": "mermaid渲染工具",
     "folder": "mermaid_offline"
