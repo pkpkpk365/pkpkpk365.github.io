@@ -10,5 +10,9 @@
   {
     "name": "mermaid渲染工具",
     "folder": "mermaid_offline"
+  },
+  {
+    "name": "微信交易合并转换工具",
+    "folder": "tencent_trade"
   }  
 ]
