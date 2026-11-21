@@ -18,5 +18,9 @@
   {
     "name": "理财产品分析工具",
     "folder": "licai_analysis"
-  } 
+  },
+  {
+    "name": "股票买卖数量分析工具",
+    "folder": "stock_trading_analysis"
+  }
 ]
