@@ -14,5 +14,9 @@
   {
     "name": "微信交易合并转换工具",
     "folder": "tencent_trade"
-  }  
+  },
+  {
+    "name": "理财产品分析工具",
+    "folder": "licai_analysis"
+  } 
 ]
